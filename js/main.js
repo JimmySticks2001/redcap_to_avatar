@@ -29,16 +29,19 @@ $(document).ready(function() {
 
 
   //
-  //Test notification
+  //Test notification and spinner
   //
   $("#button_redcap").click(function(){
-    notification("alert", "Something borked")
+    notification("alert", "Something borked");
   });
   $("#button_avatar").click(function(){
-    notification("info", "Something happened")
+    $(".spinner_container_container").show();
+  });
+  $(".spinner_container").click(function(){
+    $(".spinner_container_container").hide();
   });
 
-});
+});//end doc ready
 
 
 
@@ -46,12 +49,12 @@ $(document).ready(function() {
 //
 //Notification toast
 //
-var timeoutID;  //Store the timeoutID globally so we can remove the timer before setting a new one.
+var notificationTimeoutID;  //Store the notificationTimeoutID globally so we can remove the timer before setting a new one.
 function notification(type, message){
   //clear the old timeout
-  window.clearTimeout(timeoutID);
+  window.clearTimeout(notificationTimeoutID);
   //make a new one. Pretty much restarting the timer.
-  timeoutID = window.setTimeout(function(){$(".notification").slideUp(250)},5000);
+  notificationTimeoutID = window.setTimeout(function(){$(".notification").slideUp(250)},5000);
 
   if(type == "alert"){
     $(".notification").removeClass("info");

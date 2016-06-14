@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>REDcap to Avatar</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/material_spinner.css">
     <script src="js/jquery-2.2.2.min.js"></script>
     <script src="js/main.js"></script>
 
@@ -19,6 +20,15 @@
     <div class="notification">
       <p></p>
     </div>
+
+    <div class="spinner_container_container initially_hidden">
+      <div class="spinner_container">
+        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+          <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+        </svg>
+      </div>
+    </div>
+
 
     <a href="#" class="big_button left" id="button_redcap">
       Open REDcap CSV
