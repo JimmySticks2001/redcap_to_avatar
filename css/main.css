@@ -1,13 +1,53 @@
-.notification {
-  height: 49px;
-  color: #FFFFFF;
-  /*position: fixed;*/
-  width: 100%;
-  z-index: 99;
+* {
+  box-sizing: border-box;
 }
 
-.notification_wrapper {
+body {
+  display: inline-block;
+}
+
+.big_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px 32px;
+  border-radius: 10px;
+  margin: 4px 5px;
+
+  background-color: #03A9F4;
+  text-align: center;
+  text-decoration: none;
+  font-size: 9vmin;
+  line-height: 9vmin;
+  color: #FFFFFF;
+
+  transition-duration: 0.4s;
+}
+
+.big_button:hover {
+  background-color: #0288D1;
+}
+
+.left {
+  width: calc(50% - 10px);
+  height: calc(100% - 9px);
+  float: left;
+}
+
+.right {
+  width: calc(50% - 10px);
+  height: calc(100% - 9px);
+  float: right;
+}
+
+.notification {
+  position: absolute;
+
   height: 49px;
+  color: #FFFFFF;
+  width: 100%;
+  z-index: 99;
 }
 
 .notification p {
@@ -24,25 +64,7 @@
   background-color: #00bcd4;
 }
 
-table {
-  width: 100%;
-  /*margin-top: -20px;*/
-}
 
-.mdl-data-table td {
-  height: 0px !important;
-  padding: 2px 18px !important;
-}
-
-tbody tr {
-  height: 0px !important;
-}
-
-.bytes {
-  display: inline-block;
-  text-align: right;
-  width: 30px;
-}
 
 .initially_hidden {
   display: none;

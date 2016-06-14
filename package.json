@@ -1,8 +1,14 @@
 {
-  "name": "helloworld",
+  "name": "REDcap to Avatar",
   "main": "index.html",
   "dependencies": {
-    "browser-serialport": "2.0.3",
     "fs": "0.1.7"
+  },
+  "window": {
+    "title": "REDcap to Avatar",
+    "width": 388,
+    "height": 101,
+    "min_width": 388,
+    "min_height": 125
   }
 }
