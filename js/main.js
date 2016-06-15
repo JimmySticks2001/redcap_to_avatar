@@ -1,3 +1,6 @@
+var spinnerTimeoutID;
+var state = 0;
+
 $(document).ready(function() {
   "use strict";
 
@@ -31,23 +34,73 @@ $(document).ready(function() {
   //
   //Test notification and spinner
   //
-  $("#button_redcap").click(function(){
-    notification("alert", "Something borked");
-  });
-  $("#button_avatar").click(function(){
-    $(".spinner_container_container").show();
-  });
+  $("#button").click(function(){
+    if(state == 0){
+      //open openFileDialog
+      var chooser = $('#openFileDialog');
+      chooser.unbind('change');
+      chooser.trigger('click');
+      chooser.change(function(evt) {
+        if($(this).val()){
+          //do the thing to the file
+          csvToXml($(this).val());
+
+          //show the spinner while working with the file.
+          $(".spinner_container_container").show();
+          window.clearTimeout(spinnerTimeoutID);
+          spinnerTimeoutID = window.setTimeout(function(){
+            $(".spinner_container_container").hide();
+            $("#button").text("Save as Avatar XML");
+            state = 1;
+          }, 5000);
+        }else{
+          //if the cancel button was selected instead of opening a file, do nothing.
+        }
+      });
+
+    }else if(state == 1){
+      //open saveFileDialog
+      var chooser = $('#saveFileDialog');
+      chooser.unbind('change');
+      chooser.attr('nwsaveas', moment().format("MM_DD_YYYY__hh_mm_ss") + ".xml" );
+      chooser.trigger('click');
+      chooser.change(function(evt) {
+        if($(this).val()){
+          //save the XML content to the selected file location
+          fs.writeFile($(this).val(), assembleCsv(), function(err) {
+            if(err){
+              notification('alert', 'Unable to save XML');
+              return console.log(err);
+            }else{
+              $("#button").text("Open REDcap CSV");
+              state = 0;
+            }
+          });
+        }else{
+          //if the cancel button was selected instead of saving a file, do nothing.
+        }
+      });
+
+
+    }
+  });//end button click
+
+
+  //If spinner is clicked, test alert notification for funsies.
   $(".spinner_container").click(function(){
+    notification("alert", "Something bad happened");
+    window.clearTimeout(spinnerTimeoutID);
     $(".spinner_container_container").hide();
+    $("#button").text("Open REDcap CSV");
+    state = 0;
   });
+
 
 });//end doc ready
 
 
-
-
 //
-//Notification toast
+//Display a notification in the window with type {string} "alert" or "info", and {string} message to display.
 //
 var notificationTimeoutID;  //Store the notificationTimeoutID globally so we can remove the timer before setting a new one.
 function notification(type, message){
@@ -66,6 +119,46 @@ function notification(type, message){
 
   $(".notification").html("<p>" + message + "</p>").slideDown(250);
 };//end notification
+
+
+//
+//Open the selected CSV file and convert it to the proper XML format which Avatar will accept.
+//
+function csvToXml(csvFile){
+  console.log(csvFile);
+}//end csvToXml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //

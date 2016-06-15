@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/material_spinner.css">
     <script src="js/jquery-2.2.2.min.js"></script>
+    <script src="js/moment.min.js"></script>
     <script src="js/main.js"></script>
 
     <!--google material design things https://getmdl.io/ -->
@@ -30,15 +31,17 @@
     </div>
 
 
-    <a href="#" class="big_button left" id="button_redcap">
+    <a href="#" class="big_button left" id="button">
       Open REDcap CSV
     </a>
-    <a href="#" class="big_button right" id="button_avatar">
+    <!-- <a href="#" class="big_button right" id="button_avatar">
       Save as Avatar XML
-    </a>
+    </a> -->
 
-    <!-- Save file thingy -->
-    <input style="display:none;" id="saveFileDialog" type="file" nwsaveas="canlog.csv" />
+    <!-- Open file dialog -->
+    <input style="display:none;" id="openFileDialog" type="file" />
+    <!-- Save file dialog -->
+    <input style="display:none;" id="saveFileDialog" type="file" nwsaveas=":D" />
 
   </body>
 </html>
