@@ -4,45 +4,21 @@
     <meta charset="UTF-8" />
     <title>REDcap to Avatar</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" type="text/css" href="css/material_spinner.css">
     <script src="js/jquery-2.2.2.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script src="js/papaparse.min.js"></script>
     <script src="js/main.js"></script>
-
-    <!--google material design things https://getmdl.io/ -->
-    <link rel="stylesheet" href="css/material.min.css">
-    <script src="js/material.min.js"></script>
-    <!-- icons are from https://design.google.com/icons/ -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
   </head>
   <body>
 
-    <div class="notification">
-      <p></p>
-    </div>
-
-    <div class="spinner_container_container initially_hidden">
-      <div class="spinner_container">
-        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-          <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-        </svg>
-      </div>
-    </div>
-
-
-    <a href="#" class="big_button left" id="button">
+    <a href="#" class="big_button" id="button">
       Open REDcap CSV
     </a>
-    <!-- <a href="#" class="big_button right" id="button_avatar">
-      Save as Avatar XML
-    </a> -->
 
     <!-- Open file dialog -->
-    <input style="display:none;" id="openFileDialog" type="file" />
+    <input class="initially_hidden" id="openFileDialog" type="file" accept=".csv" />
     <!-- Save file dialog -->
-    <input style="display:none;" id="saveFileDialog" type="file" nwsaveas=":D" />
+    <input class="initially_hidden" id="saveFileDialog" type="file" nwsaveas=":D" />
 
   </body>
 </html>

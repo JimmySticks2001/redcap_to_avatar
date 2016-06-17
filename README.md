@@ -2,19 +2,19 @@
 
 ##### Application to convert REDcap exported CSV files into an Avatar data import acceptable XML format.
 
+###### One big button! What more do you need?!
+
+![alt-text](https://raw.githubusercontent.com/JimmySticks2001/redcap_to_avatar/for_github/1.PNG)
+
+![alt-text](https://raw.githubusercontent.com/JimmySticks2001/redcap_to_avatar/for_github/2.PNG)
+
+![alt-text](https://raw.githubusercontent.com/JimmySticks2001/redcap_to_avatar/for_github/3.PNG)
+
+One button, three states.
+
+Built with Node Webkit with jquery, moment.js, papaparse, and xml-writer dependencies. 
 
 
 ##Things to do:
-
-* Everything.
-
-* Convert REDcap date format into Avatar format.
-
-* Check for CSV on input.
-* Show errors for malformed input data.
-* Make button into error box, clear when clicked.
-* Check into repeatability. Not allowed to open same file over again for some reason.
-* Remove spinner. Code to fast for spinner to appear. Fade betwixt buttons.
-
 
 ##Things finished:
