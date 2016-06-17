@@ -1,8 +1,10 @@
 {
   "name": "REDcap to Avatar",
+  "version": "0.0.0",
   "main": "index.html",
   "dependencies": {
-    "fs": "0.1.7"
+    "fs": "0.1.7",
+    "xml-writer": "1.6.0"
   },
   "window": {
     "title": "REDcap to Avatar",
