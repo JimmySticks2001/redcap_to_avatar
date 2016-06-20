@@ -1,6 +1,6 @@
-var state = 0;
-var fs, xmlWriter;
-var xmlString;
+var buttonState = 0;  //keep track of the current state of the big button
+var fs, xmlWriter;    //file system and xml writer objects
+var xmlString;        //the generated XML object
 
 $(document).ready(function() {
   "use strict"; //strict mode because it makes sense
@@ -13,55 +13,50 @@ $(document).ready(function() {
   // Get the current window
   var win = nw.Window.get();
   // Show the dev tools at app startup
-  win.showDevTools();
+  //win.showDevTools();
 
-  //Since a try/catch for some reason isn't working for xml-writer, we need to handle the error for the window.
+  //Catch any errors which may not be properly handled and display a generic message.
   window.onerror = function(){
-    $("#button").css("background-color", "#F44336");
-    $("#button").text("Something went wrong :(");
-    state = 2;
+    buttonStateChange("red", 2, "Something went wrong :(");
   }//end onerror
+
+  buttonStateChange("blue", 0, "Open REDcap CSV");
 
   //
   //Button action. Since it is the same button, only changing content and action, make button perform different
   //acts when state changes. Possible states: 0 = ready to accept CSV file, 1 = ready to save XML file, 2 = error.
   //
   $("#button").click(function(){
-    if(state == 0){
+    if(buttonState == 0){
       //open openFileDialog
       $('#openFileDialog').change(function(evt) {
         if($(this).val()){  //if there is a file chosen...
-          //do the thing to the file
-          csvToXml(evt.target.files[0]);
-          $(this).val("");  //blank value so changed will fire again
+          csvToJson(evt.target.files[0]); //convert file from csv to json
+          $(this).val("");  //blank value in file dialog so changed event will fire again
         }
       });
       $('#openFileDialog').trigger('click');  //open the dialog
 
-    }else if(state == 1){
+    }else if(buttonState == 1){
       //open saveFileDialog
-      $('#saveFileDialog').attr('nwsaveas', moment().format("MM_DD_YYYY__hh_mm_ss") + ".xml" );
+      $('#saveFileDialog').attr('nwsaveas', moment().format("MM_DD_YYYY__hh_mm_ss") + ".xml" ); //set the file name
       $('#saveFileDialog').change(function(evt) {
         if($(this).val()){  //if a file location is chosen...
           //save the XML content to the selected file location
           fs.writeFile($(this).val(), xmlString, function(err) {
             if(err){
-              notification('alert', 'Unable to save XML');
+              buttonStateChange("red", 2, "Unable to save XML file :(");
               return console.log(err);
             }else{
-              $("#button").css("background-color", "#03A9F4");
-              $("#button").text("Open REDcap CSV");
-              state = 0;
+              buttonStateChange("blue", 0, "Open REDcap CSV");
             }
           });
-          $(this).val("");  //blank value so changed will fire again
+          $(this).val("");  //blank value in file dialog so changed event will fire again
         }
       });
       $('#saveFileDialog').trigger('click');  //open the dialog
-    }else if(state == 2){
-      $("#button").css("background-color", "#03A9F4");
-      $("#button").text("Open REDcap CSV");
-      state = 0;
+    }else if(buttonState == 2){
+      buttonStateChange("blue", 0, "Open REDcap CSV");
     }
   });//end button click
 
@@ -69,21 +64,24 @@ $(document).ready(function() {
 
 
 //
-//Open the selected CSV file and convert it to the proper XML format which Avatar will accept.
+//Open the selected CSV file and convert it to JSON.
 //
-function csvToXml(csvFile){
+function csvToJson(csvFile){
   //assemble the config object for papaparse
   papa_config = {
     delimiter: ",",
   	header: true,
     skipEmptyLines: true,
   	complete: function(results, file){
-      jsonToXml(results);
-      $("#button").css("background-color", "#4CAF50");
-      $("#button").text("Save as Avatar XML");
-      state = 1;
+      if(checkResultsHeaders(results.data[0]).length > 0){  //check the headers to see if they are correct, error if not
+        buttonStateChange("red", 2, "Improper CSV headers :(");
+      } else {
+        jsonToXml(results);
+        buttonStateChange("green", 1, "Save as Avatar XML");
+      }
     },
-  	error: function(err, file){
+  	error: function(err, file){  //if error while parsing, error.
+      buttonStateChange("red", 2, "Something went wrong :(");
       console.log(err);
       console.log(file);
     }
@@ -91,15 +89,14 @@ function csvToXml(csvFile){
 
   //parse the csv file. It will fire the complete event defined in papa_config when done
   Papa.parse(csvFile, papa_config);
-}//end csvToXml
+}//end csvToJson
 
 
 //
 //Takes in papaparse results object and assembles an XML doc.
 //
 function jsonToXml(results){
-  //console.log(results);
-  var record_id;
+  var record_id;  //store the record_id so we can tell when we have to close the SYSTEM.redcap_data tag
 
   xml = new xmlWriter(true);  //true includes indentation in the XML file
   xml.startDocument();
@@ -147,6 +144,7 @@ function jsonToXml(results){
             (element.ca_cpsagency___8 == "1" ? "8" : "")
           ]
 
+          //convert arrays into & delimited strings
           var languages = arrayToAmpString(lang_array);
           var maritals = arrayToAmpString(marital_array);
           var enrollmentnos = arrayToAmpString(enrollmentno_array);
@@ -202,7 +200,7 @@ function jsonToXml(results){
               if(element.kempe_ace_fob != "") xml.writeElement("kempe_ace_fob", element.kempe_ace_fob);
               if(element.init_personfill_other != "") xml.writeElement("init_personfill_other", element.init_personfill_other);
               if(element.init_personfill != "") xml.writeElement("init_personfill", element.init_personfill);
-              if(element.init_age != "") xml.writeElement("init_age", element.init_age);
+              if(element.init_age != "") xml.writeElement("age_init", element.init_age);
               if(element.init_housing != "") xml.writeElement("init_housing", element.init_housing);
               if(element.init_race != "") xml.writeElement("init_race", element.init_race);
               if(element.intake_professional != "") xml.writeElement("intake_professional", element.intake_professional);
@@ -294,19 +292,159 @@ function jsonToXml(results){
 
 
 //
+//Takes in a papaparse json object and makes sure all of the headers are there.
+//Returns an array of missing headers if any.
+//
+function checkResultsHeaders(result){
+  var missingHeaders = [];
+  var requiredHeaders = [
+    "init_languages___1",
+    "init_languages___2",
+    "init_languages___3",
+    "init_languages___4",
+    "init_languages___5",
+    "init_languages___6",
+    "init_languages___7",
+    "init_languages___8",
+    "init_languages___9",
+    "init_marital___1",
+    "init_marital___2",
+    "init_marital___3",
+    "init_marital___4",
+    "init_marital___5",
+    "agen_enrollmentno___1",
+    "agen_enrollmentno___2",
+    "agen_enrollmentno___3",
+    "agen_enrollmentno___4",
+    "agen_enrollmentno___5",
+    "agen_enrollmentno___6",
+    "ca_cpsagency___1",
+    "ca_cpsagency___2",
+    "ca_cpsagency___3",
+    "ca_cpsagency___4",
+    "ca_cpsagency___5",
+    "ca_cpsagency___6",
+    "ca_cpsagency___7",
+    "ca_cpsagency___8",
+    "parent_name",
+    "init_administered",
+    "init_agemother",
+    "record_id",
+    "currently_pregnant",
+    "init_pcp",
+    "init_primipara",
+    "init_grossincome",
+    "init_immifam",
+    "init_uscitizen",
+    "init_smoking",
+    "family_enrolled",
+    "enrollment_date",
+    "reason_not_entrolled",
+    "date_kempe",
+    "kempe_chexp_mobscore",
+    "kempe_chexp_fobscore",
+    "kempe_lifescore_mob",
+    "kempe_lifescore_fob",
+    "kempe_parenting_mobscore",
+    "kempe_parenting_fobscore",
+    "kempe_coping_mobscore",
+    "kempe_coping_fobscore",
+    "mob_stressors_score",
+    "fob_stressors_score",
+    "kempe_anger_mobscore",
+    "kempe_anger_fobscore",
+    "kempe_exp_mobscore",
+    "kempe_exp_fobscore",
+    "kempe_disc_mobscore",
+    "kempe_disc_fobscore",
+    "kempe_percept_mobscore",
+    "kempe_percept_fobscore",
+    "kempe_attach_mobscore",
+    "kempe_attach_fobscore",
+    "mob_total_score",
+    "fob_total_score",
+    "kempe_ace_mob",
+    "kempe_ace_fob",
+    "init_personfill_other",
+    "init_personfill",
+    "init_age",
+    "init_housing",
+    "init_race",
+    "intake_professional",
+    "cc_close_date",
+    "cc_reason_term",
+    "firstsurv_1sthvdate",
+    "frstvisit_hv_name",
+    "first_pregnow",
+    "first_baby_gender",
+    "first_prenatalcare",
+    "first_dob",
+    "first_babyfirst",
+    "first_babylast",
+    "first_dobest",
+    "prenatal_hv_name",
+    "prenatal_gest",
+    "surv_currdate",
+    "surv_surveyname",
+    "surv_administered",
+    "surv_dob",
+    "visitnote_date",
+    "hfa_level",
+    "curr_refermade",
+    "curr_ref_num",
+    "curr_addref",
+    "ca_date"
+  ];
+
+  requiredHeaders.forEach(function(header, index){
+    if(typeof result[header] === 'undefined'){
+      missingHeaders.push(header);
+    }
+  });
+
+  return missingHeaders;
+}//end checkResultsHeaders
+
+
+//
 //Takes in an array of strings, outputs a string made from the joined array minus the blank strings.
 //Used to convert REDcap multiselects into Avatar & separated numbers.
 //
 function arrayToAmpString(array){
   var ampString = "";
 
-  //reverse order array traversal so splicing works correctly
+  //reverse order array traversal so splicing works correctly, else splicing in a loop would alter the length
+  //of the array it is currently iterating through.
   for(i = array.length-1; i >= 0 ; i--){
     if(array[i] == "" || array[i] == "0"){
       array.splice(i, 1);
     }
   }
-  if(array.length > 1){ ampString = array.join("&")}
+  if(array.length > 1){ //if the array still contains items, they are legit selections. Build & delimited string
+    ampString = array.join("&")
+  } else if(array.length == 1){ //if it's just a single item, no & needed
+    ampString = array[0];
+  }
 
   return ampString
 }//end arrayToAmpString
+
+
+//
+//Controls the button text, color, and state variable.
+//
+function buttonStateChange(color, state, text){
+  var hex = "#333333";  //default to grey just beacuse
+
+  if(color == "red"){
+    hex = "#F44336";
+  } else if(color == "green"){
+    hex = "#4CAF50";
+  } else if(color == "blue"){
+    hex = "#03A9F4";
+  }
+
+  $("#button").css("background-color", hex);
+  $("#button").text(text);
+  buttonState = state;
+}//end buttonState

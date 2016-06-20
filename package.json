@@ -1,17 +1,58 @@
 {
-  "name": "REDcap to Avatar",
-  "version": "0.0.0",
-  "main": "index.html",
-  "dependencies": {
-    "fs": "0.1.7",
-    "xml-writer": "1.6.0"
-  },
-  "window": {
-    "title": "REDcap to Avatar",
-    "width": 300,
-    "height": 300,
-    "min_width": 300,
-    "min_height": 300,
-    "icon": "img/Netsmart_logo_tiny.png"
-  }
+    "main": "index.html",
+    "additional_trust_anchors": [
+        ""
+    ],
+    "webkit": {
+        "page-cache": false,
+        "plugin": false,
+        "java": false
+    },
+    "single-instance": true,
+    "description": "Convert REDcap export CSV file into Avatar acceptable XML data import.",
+    "window": {
+        "frame": true,
+        "height": 300,
+        "resizable": true,
+        "icon": "img/Netsmart_logo_tiny.png",
+        "always_on_top": false,
+        "min_width": 300,
+        "show": true,
+        "transparent": false,
+        "title": "REDcap to Avatar",
+        "visible": true,
+        "kiosk_emulation": false,
+        "min_height": 300,
+        "width": 300,
+        "exe_icon": "img\\Netsmart_logo.png",
+        "kiosk": false,
+        "fullscreen": false,
+        "as_desktop": false,
+        "toolbar": false,
+        "show_in_taskbar": true
+    },
+    "webexe_settings": {
+        "mac-x32": false,
+        "download_dir": "C:/Users/tlightfoot/AppData/Local/Web2Executable/Web2Executable/files/downloads",
+        "sdk_build": false,
+        "custom_script": "",
+        "mac-x64": false,
+        "force_download": false,
+        "export_dir": "output",
+        "nw_version": "0.13.3",
+        "uncompressed_folder": true,
+        "linux-x32": false,
+        "linux-x64": false,
+        "windows-x32": true,
+        "nw_compression_level": 0,
+        "windows-x64": false
+    },
+    "app_name": "REDcap to Avatar",
+    "nodejs": true,
+    "version": "1.1.0",
+    "dependencies": {
+        "fs": "0.1.7",
+        "xml-writer": "1.6.0"
+    },
+    "name": "REDcap to Avatar"
 }
