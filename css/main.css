@@ -10,18 +10,34 @@
 }
 
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.button_container {
+  position: relative;
+
+  border-radius: 3vmin;
+  margin: 4vmin 4vmin;
+
+  width: calc(100% - 8vmin);
+  height: calc(100% - 8vmin);
+
+  cursor: pointer;
+}
+
+
 .big_button {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: calc(100% - 8vmin);
-  height: calc(100% - 8vmin);
-  float: left;
-
   padding: 32px 32px;
-  border-radius: 3vmin;
-  margin: 4vmin 4vmin;
+  height: 100%;
+  border-radius: 3vmin 3vmin 3vmin 3vmin;
 
   background-color: #03A9F4;
   text-align: center;
@@ -33,7 +49,23 @@
   transition-duration: 0.4s;
 }
 .big_button:hover {
-  background-color: #0288D1;
+  -webkit-filter: brightness(90%);
+}
+
+
+.back_button {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -10%);
+
+  padding: 8px;
+  border-radius: 50%;
+
+  background-color: #319634;
+}
+.back_button img{
+  height: 10vmin;
 }
 
 

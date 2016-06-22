@@ -11,7 +11,7 @@ $(document).ready(function() {
   xmlWriter = require('xml-writer');  //https://www.npmjs.com/package/xml-writer
 
   // Get the current window
-  var win = nw.Window.get();
+  //var win = nw.Window.get();
   // Show the dev tools at app startup
   //win.showDevTools();
 
@@ -60,6 +60,10 @@ $(document).ready(function() {
     }
   });//end button click
 
+  $("#back").click(function(){
+    buttonStateChange("blue", 0, "Open REDcap CSV");
+  });
+
 });//end doc ready
 
 
@@ -82,8 +86,6 @@ function csvToJson(csvFile){
     },
   	error: function(err, file){  //if error while parsing, error.
       buttonStateChange("red", 2, "Something went wrong :(");
-      console.log(err);
-      console.log(file);
     }
   }
 
@@ -440,8 +442,12 @@ function buttonStateChange(color, state, text){
     hex = "#F44336";
   } else if(color == "green"){
     hex = "#4CAF50";
+    $("#back").css("background-color", "#319634") //slightly darker green
+    $("#back").fadeIn(400);
   } else if(color == "blue"){
     hex = "#03A9F4";
+    $("#back").css("background-color", hex)
+    $("#back").fadeOut(400);
   }
 
   $("#button").css("background-color", hex);
