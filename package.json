@@ -1,58 +1,58 @@
 {
-    "main": "index.html",
+    "webexe_settings": {
+        "windows-x32": true,
+        "force_download": false,
+        "mac-x64": false,
+        "windows-x64": false,
+        "mac-x32": false,
+        "linux-x64": false,
+        "uncompressed_folder": true,
+        "custom_script": "",
+        "sdk_build": false,
+        "nw_version": "0.13.3",
+        "nw_compression_level": 0,
+        "linux-x32": false,
+        "export_dir": "output",
+        "download_dir": "C:/Users/tlightfoot/AppData/Local/Web2Executable/Web2Executable/files/downloads"
+    },
     "additional_trust_anchors": [
         ""
     ],
-    "webkit": {
-        "page-cache": false,
-        "plugin": false,
-        "java": false
-    },
-    "single-instance": true,
-    "description": "Convert REDcap export CSV file into Avatar acceptable XML data import.",
     "window": {
-        "frame": true,
-        "height": 300,
-        "resizable": true,
+        "as_desktop": false,
+        "kiosk": false,
+        "exe_icon": "img\\Netsmart_logo.png",
         "icon": "img/Netsmart_logo_tiny.png",
-        "always_on_top": false,
+        "min_height": 300,
+        "resizable": true,
+        "kiosk_emulation": false,
+        "visible": true,
+        "fullscreen": false,
+        "toolbar": false,
         "min_width": 300,
-        "show": true,
+        "width": 300,
+        "always_on_top": false,
+        "show_in_taskbar": true,
         "transparent": false,
         "title": "REDcap to Avatar",
-        "visible": true,
-        "kiosk_emulation": false,
-        "min_height": 300,
-        "width": 300,
-        "exe_icon": "img\\Netsmart_logo.png",
-        "kiosk": false,
-        "fullscreen": false,
-        "as_desktop": false,
-        "toolbar": false,
-        "show_in_taskbar": true
+        "height": 300,
+        "show": true,
+        "frame": true
     },
-    "webexe_settings": {
-        "mac-x32": false,
-        "download_dir": "C:/Users/tlightfoot/AppData/Local/Web2Executable/Web2Executable/files/downloads",
-        "sdk_build": false,
-        "custom_script": "",
-        "mac-x64": false,
-        "force_download": false,
-        "export_dir": "output",
-        "nw_version": "0.13.3",
-        "uncompressed_folder": true,
-        "linux-x32": false,
-        "linux-x64": false,
-        "windows-x32": true,
-        "nw_compression_level": 0,
-        "windows-x64": false
-    },
-    "app_name": "REDcap to Avatar",
     "nodejs": true,
-    "version": "1.1.0",
+    "main": "index.html",
+    "app_name": "REDcap to Avatar",
+    "version": "1.2.1",
     "dependencies": {
-        "fs": "0.1.7",
-        "xml-writer": "1.6.0"
+        "xml-writer": "1.6.0",
+        "fs": "0.1.7"
     },
-    "name": "REDcap to Avatar"
+    "webkit": {
+        "plugin": false,
+        "java": false,
+        "page-cache": false
+    },
+    "name": "REDcap to Avatar",
+    "single-instance": true,
+    "description": "Convert REDcap export CSV file into Avatar acceptable XML data import."
 }

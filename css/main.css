@@ -63,6 +63,8 @@ body {
   border-radius: 50%;
 
   background-color: #319634;
+
+  transition-duration: 0.4s;
 }
 .back_button img{
   height: 10vmin;
